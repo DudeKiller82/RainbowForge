@@ -857,8 +857,9 @@ namespace RainbowForge
 		// This entire assumption is incorrect and why
 		// RF is being replaced by RS
 		File = 0x57FBAA34,
-		File2 = 0x57FBAA36
-	}
+		File2 = 0x57FBAA36,
+		File3 = 0x57FBAA37
+    }
 
 	public enum AssetType
 	{

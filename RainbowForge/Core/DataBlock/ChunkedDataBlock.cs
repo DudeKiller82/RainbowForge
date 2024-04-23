@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.IO.Compression;
+using System.Text;
 using RainbowForge.Compression;
 using Zstandard.Net;
 
@@ -21,8 +23,7 @@ namespace RainbowForge.Core.DataBlock
 			UnpackedLength = unpackedLength;
 			UseOodle = useOodle;
 		}
-
-		public Stream GetDataStream(BinaryReader r)
+        public Stream GetDataStream(BinaryReader r)
 		{
 			var ms = new MemoryStream();
 
@@ -40,7 +41,10 @@ namespace RainbowForge.Core.DataBlock
 						var compressed = r.ReadBytes((int)chunk.SerializedLength);
 						var decompressed = Oodle2Core8.Decompress(compressed, (int)chunk.DataLength);
 						ms.Write(decompressed, 0, decompressed.Length);
-					}
+						//For Hex retro ingeneering
+                        //File.WriteAllBytes($"E:\\dump.forge", decompressed);
+                        //File.WriteAllBytes($"E:\\dump{chunk.Offset}.forge", decompressed);
+                    }
 					else
 					{
 						using var dctx = new ZstandardStream(r.BaseStream, CompressionMode.Decompress, true);

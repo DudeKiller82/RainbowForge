@@ -24,7 +24,9 @@ namespace RainbowForge.Dump
 			var assetStream = forgeAsset.GetDataStream(forge);
 
 			var magic = MagicHelper.GetFiletype(entry.MetaData.FileType);
-			switch (magic)
+			magic = AssetType.Texture; //Forces texture because there is no longer metadata in version 31 and 32
+
+            switch (magic)
 			{
 				case AssetType.Mesh:
 				{

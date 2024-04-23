@@ -1,0 +1,25 @@
+{
+  "profiles": {
+    "DumpTool Old": {
+      "commandName": "Project",
+      "commandLineArgs": "dumpall .\\forge\\old.forge",
+      "environmentVariables": {
+        "OODLE2_8_PATH": "C:\\Users\\pierr\\source\\repos\\RainbowForge\\DumpTool\\bin\\Debug\\net6.0\\oo2core_8_win64.dll"
+      }
+    },
+    "DumpTool Actual": {
+      "commandName": "Project",
+      "commandLineArgs": "dumpall .\\forge\\actual.forge",
+      "environmentVariables": {
+        "OODLE2_8_PATH": "C:\\Users\\pierr\\source\\repos\\RainbowForge\\DumpTool\\bin\\Debug\\net6.0\\oo2core_8_win64.dll"
+      }
+    },
+    "Dump Tool New": {
+      "commandName": "Project",
+      "commandLineArgs": "dumpall .\\forge\\new.forge",
+      "environmentVariables": {
+        "OODLE2_8_PATH": "C:\\Users\\pierr\\source\\repos\\RainbowForge\\DumpTool\\bin\\Debug\\net6.0\\oo2core_8_win64.dll"
+      }
+    }
+  }
+}

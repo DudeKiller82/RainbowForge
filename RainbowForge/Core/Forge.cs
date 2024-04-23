@@ -180,7 +180,8 @@ namespace RainbowForge.Core
 					return Hash.Read(Stream);
 				case ContainerMagic.File:
 				case ContainerMagic.File2:
-					return ForgeAsset.Read(Stream, entry);
+                case ContainerMagic.File3:
+                    return ForgeAsset.Read(Stream, entry);
 				default:
 					throw new InvalidDataException($"No constructor for container {i} of style 0x{containerMagic:X} (from 0x{start:X} to 0x{end:X}), skipping");
 			}

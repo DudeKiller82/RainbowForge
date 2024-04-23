@@ -26,7 +26,33 @@ namespace RainbowForge
 		{
 			switch (version)
 			{
-				case >= 30:
+                case >= 32:
+                {
+                    // in AC, a name length with 0x80000000 bit set means encrypted
+                    var filenameLength = r.ReadUInt16();
+                    var var1 = r.ReadUInt16();
+                    var var2 = r.ReadUInt32();
+                    var filename = r.ReadBytes((int)filenameLength);
+                    var fileType = r.ReadUInt32();
+                    var uid = r.ReadUInt64();
+
+                    var name = NameEncoding.DecodeName(filename, fileType, uid, 0, NameEncoding.FILENAME_ENCODING_FILE_KEY_STEP);
+                    return new FileMetaData(Encoding.ASCII.GetString(name), filename, var1, fileType, uid);
+                }
+                case 31:
+                {
+                    // in AC, a name length with 0x80000000 bit set means encrypted
+                    var filenameLength = r.ReadUInt16();
+                    var var1 = r.ReadUInt16();
+                    var var2 = r.ReadUInt32();
+                    var filename = r.ReadBytes((int)filenameLength);
+                    var fileType = r.ReadUInt32();
+                    var uid = r.ReadUInt64();
+
+                    var name = NameEncoding.DecodeName(filename, fileType, uid, 0, NameEncoding.FILENAME_ENCODING_FILE_KEY_STEP);
+                    return new FileMetaData(Encoding.ASCII.GetString(name), filename, var1, fileType, uid);
+                }
+                case 30:
 				{
 					// in AC, a name length with 0x80000000 bit set means encrypted
 					var filenameLength = r.ReadUInt32();

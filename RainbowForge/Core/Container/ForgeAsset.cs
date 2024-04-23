@@ -49,8 +49,9 @@ namespace RainbowForge.Core.Container
 			{
 				3 => ChunkedDataBlock.Read(r),
 				13 => ChunkedDataBlock.Read(r, true),
+                15 => ChunkedDataBlock.Read(r, true),
 				7 => FlatDataBlock.Read(r, entry),
-				_ => throw new NotImplementedException()
+                _ => throw new NotImplementedException()
 			};
 		}
 
