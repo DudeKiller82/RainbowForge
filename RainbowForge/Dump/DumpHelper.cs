@@ -41,10 +41,13 @@ namespace RainbowForge.Dump
 				case AssetType.Texture:
 				{
 					var texture = Texture.Read(assetStream, forge.Version);
+					// Filter only usefull textures
+					if (texture.TexType == TextureType.Diffuse || texture.TexType == TextureType.Misc)
+						{
+							var surface = texture.ReadSurfaceBytes(assetStream);
 
-					var surface = texture.ReadSurfaceBytes(assetStream);
-
-					DumpTexture(outputDirectory, $"id{entry.Uid}_type{texture.TexType}", texture, surface);
+							DumpTexture(outputDirectory, $"{texture.TexType}_{entry.Uid}", texture, surface);
+						}
 
 					break;
 				}
