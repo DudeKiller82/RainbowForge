@@ -23,74 +23,89 @@ namespace RainbowForge.Dump
 
 			var assetStream = forgeAsset.GetDataStream(forge);
 
-			var magic = MagicHelper.GetFiletype(entry.MetaData.FileType);
-			magic = AssetType.Texture; //Forces texture because there is no longer metadata in version 31 and 32
-
-            switch (magic)
+			if (entry.MetaData != null)
 			{
-				case AssetType.Mesh:
-				{
-					var header = MeshHeader.Read(assetStream, forge.Version);
+                // version < 34
+                var magic = MagicHelper.GetFiletype(entry.MetaData.FileType);
+                magic = AssetType.Texture; //Forces texture because there is no longer metadata in version 31 and 32
 
-					var mesh = CompiledMeshObject.Read(assetStream, header);
+                switch (magic)
+                {
+                    case AssetType.Mesh:
+                        {
+                            var header = MeshHeader.Read(assetStream, forge.Version);
 
-					DumpMeshObj(outputDirectory, $"id{entry.Uid}_type{header.MeshType}_v{header.Revision}", mesh);
+                            var mesh = CompiledMeshObject.Read(assetStream, header);
 
-					break;
-				}
-				case AssetType.Texture:
-				{
-					var texture = Texture.Read(assetStream, forge.Version);
-					// Filter only usefull textures
-					if (texture.TexType == TextureType.Diffuse || texture.TexType == TextureType.Misc)
-						{
-							var surface = texture.ReadSurfaceBytes(assetStream);
+                            DumpMeshObj(outputDirectory, $"id{entry.Uid}_type{header.MeshType}_v{header.Revision}", mesh);
 
-							DumpTexture(outputDirectory, $"{texture.TexType}_{entry.Uid}", texture, surface);
-						}
+                            break;
+                        }
+                    case AssetType.Texture:
+                        {
+                            var texture = Texture.Read(assetStream, forge.Version);
+                            // Filter only usefull textures
+                            if (texture.TexType == TextureType.Diffuse || texture.TexType == TextureType.Misc)
+                            {
+                                var surface = texture.ReadSurfaceBytes(assetStream);
 
-					break;
-				}
-				case AssetType.Sound:
-				{
-					// format notes: see https://github.com/vgmstream/vgmstream/blob/master/src/meta/wwise.c
-					// vgmstream should be able to convert all of the WEM files spit out by this to WAV without any issues
+                                DumpTexture(outputDirectory, $"{texture.TexType}_{entry.Uid}", texture, surface);
+                            }
 
-					var wem = WemSound.Read(assetStream, forge.Version);
+                            break;
+                        }
+                    case AssetType.Sound:
+                        {
+                            // format notes: see https://github.com/vgmstream/vgmstream/blob/master/src/meta/wwise.c
+                            // vgmstream should be able to convert all of the WEM files spit out by this to WAV without any issues
 
-					DumpBin(outputDirectory, $"id{entry.Uid}", assetStream.BaseStream, wem.PayloadOffset, wem.PayloadLength, "wem");
+                            var wem = WemSound.Read(assetStream, forge.Version);
 
-					break;
-				}
-				case AssetType.FlatArchive:
-				{
-					var arc = FlatArchive.Read(assetStream, forge.Version);
+                            DumpBin(outputDirectory, $"id{entry.Uid}", assetStream.BaseStream, wem.PayloadOffset, wem.PayloadLength, "wem");
 
-					var arcDir = Path.Combine(outputDirectory, $"flatarchive_id{entry.Uid}");
+                            break;
+                        }
+                    case AssetType.FlatArchive:
+                        {
+                            var arc = FlatArchive.Read(assetStream, forge.Version);
 
-					foreach (var arcEntry in arc.Entries)
-					{
-						var name = $"idx{arcEntry.Index}_filetype{arcEntry.MetaData.FileType}";
+                            var arcDir = Path.Combine(outputDirectory, $"flatarchive_id{entry.Uid}");
 
-						if (Enum.IsDefined(typeof(Magic), (ulong)arcEntry.MetaData.FileType))
-							name += $"_{(Magic)arcEntry.MetaData.FileType}";
+                            foreach (var arcEntry in arc.Entries)
+                            {
+                                var name = $"idx{arcEntry.Index}_filetype{arcEntry.MetaData.FileType}";
 
-						DumpBin(arcDir, name, assetStream.BaseStream, arcEntry.PayloadOffset, arcEntry.PayloadLength);
-					}
+                                if (Enum.IsDefined(typeof(Magic), (ulong)arcEntry.MetaData.FileType))
+                                    name += $"_{(Magic)arcEntry.MetaData.FileType}";
 
-					break;
-				}
-				default:
-				{
-					var name = $"id{entry.Uid}_filetype{entry.MetaData.FileType}";
+                                DumpBin(arcDir, name, assetStream.BaseStream, arcEntry.PayloadOffset, arcEntry.PayloadLength);
+                            }
 
-					if (Enum.IsDefined(typeof(Magic), (ulong)entry.MetaData.FileType))
-						name += $"_{(Magic)entry.MetaData.FileType}";
+                            break;
+                        }
+                    default:
+                        {
+                            var name = $"id{entry.Uid}_filetype{entry.MetaData.FileType}";
 
-					DumpBin(outputDirectory, name, assetStream.BaseStream);
-					break;
-				}
-			}
+                            if (Enum.IsDefined(typeof(Magic), (ulong)entry.MetaData.FileType))
+                                name += $"_{(Magic)entry.MetaData.FileType}";
+
+                            DumpBin(outputDirectory, name, assetStream.BaseStream);
+                            break;
+                        }
+                }
+            } else
+			{
+                // version >= 34
+                var texture = Texture.Read(assetStream, forge.Version);
+                // Filter only usefull textures
+                if (texture.TexType == TextureType.Diffuse || texture.TexType == TextureType.Misc)
+                {
+                    var surface = texture.ReadSurfaceBytes(assetStream);
+
+                    DumpTexture(outputDirectory, $"{texture.TexType}_{entry.Offset}_{entry.End}", texture, surface);
+                }
+            }
 		}
 
 		public static void DumpBin(string bank, string name, Stream stream, long writeOffset = 0, int writeLength = -1, string ext = "bin")

@@ -20,6 +20,20 @@
       "environmentVariables": {
         "OODLE2_8_PATH": "D:\\Git\\RainbowForge\\Testing files\\oo2core_8_win64.dll"
       }
+    },
+    "Dump Tool Future medium": {
+      "commandName": "Project",
+      "commandLineArgs": "dumpall \"D:\\Git\\RainbowForge\\Testing files\\forge\\futureMedium.forge\"",
+      "environmentVariables": {
+        "OODLE2_8_PATH": "D:\\Git\\RainbowForge\\Testing files\\oo2core_8_win64.dll"
+      }
+    },
+    "Dump Tool Future Big": {
+      "commandName": "Project",
+      "commandLineArgs": "dumpall \"D:\\Git\\RainbowForge\\Testing files\\forge\\futureBig.forge\"",
+      "environmentVariables": {
+        "OODLE2_8_PATH": "D:\\Git\\RainbowForge\\Testing files\\oo2core_8_win64.dll"
+      }
     }
   }
 }

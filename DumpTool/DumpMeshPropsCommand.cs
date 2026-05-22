@@ -102,7 +102,7 @@ namespace DumpTool
 				{
 					var filename = Path.Combine(rootForgeDir, resolvedForgeFile + ".forge");
 					using var resolvedForgeStream = new BinaryReader(File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
-					var resolvedForge = Forge.Read(resolvedForgeStream);
+					var resolvedForge = Forge.Read(resolvedForgeStream, new List<long>());
 
 					foreach (var resolvedUid in resolvedExterns[resolvedForgeFile])
 					{

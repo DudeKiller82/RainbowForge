@@ -1,11 +1,12 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using CommandLine;
+﻿using CommandLine;
 using LiteDB;
 using RainbowForge;
 using RainbowForge.Core;
 using RainbowForge.Database;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace DumpTool
 {
@@ -50,7 +51,7 @@ namespace DumpTool
 				var forgeFile = files[fileIdx];
 
 				using var forgeStream = new BinaryReader(File.Open(forgeFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
-				var forge = Forge.Read(forgeStream);
+				var forge = Forge.Read(forgeStream, new List<long>());
 
 				var forgeFileName = Path.GetFileNameWithoutExtension(forgeFile);
 				var forgeFileIdent = GetFilename(fileIdx);

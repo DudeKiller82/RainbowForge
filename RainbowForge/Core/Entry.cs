@@ -21,7 +21,7 @@ namespace RainbowForge.Core
 
 		public static Entry Read(BinaryReader r)
 		{
-			var offset = r.ReadInt64();
+            var offset = r.ReadInt64();
 			var uid = r.ReadUInt64();
 			var size = r.ReadUInt32();
 			var end = offset + size;
